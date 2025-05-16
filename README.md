@@ -29,6 +29,7 @@ cd echo-beat
 # Then open index.html in your browser
 
 ---
+## License
 
 Copyright © 2025 Echo Beat. All rights reserved.
 
