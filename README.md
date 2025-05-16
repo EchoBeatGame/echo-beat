@@ -26,5 +26,5 @@ Echo Beat is a rhythm-based reflex game built with HTML, CSS, and JavaScript. Ta
 ```bash
 git clone https://github.com/UrbanChronicles/echo-beat.git
 cd echo-beat
-# Then open index.html in your browser
+Then open index.html in your browser
 
