@@ -1,0 +1,68 @@
+/*
+  Echo Beat - Rhythm Tap Game
+  © 2025 Echo Beat. All rights reserved.
+  This software is proprietary. No reuse or redistribution without permission.
+  Contact: echobeat.dev@gmail.com
+*/
+
+body {
+  margin: 0;
+  background: #111;
+  color: white;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  touch-action: manipulation;
+}
+
+#game {
+  text-align: center;
+  width: 100%;
+}
+
+#pulse {
+  width: 120px;
+  height: 120px;
+  margin: 20px auto;
+  background: #0ff;
+  border-radius: 50%;
+  box-shadow: 0 0 20px #0ff;
+  animation: pulse 2s infinite;
+  transform-origin: center;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.4; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+#score {
+  font-size: 24px;
+  margin-top: 20px;
+}
+
+#feedback {
+  height: 30px;
+  margin-top: 10px;
+  font-size: 20px;
+  color: #ff0;
+}
+/* Pulse Glow for Perfect Tap */
+.glow {
+  animation: glow-effect 0.2s ease-out forwards;
+}
+
+@keyframes glow-effect {
+  0% {
+    transform: scale(1.4);
+    box-shadow: 0 0 25px white;
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 20px inherit;
+  }
+}
