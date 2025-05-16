@@ -16,7 +16,7 @@ Echo Beat is a rhythm-based reflex game built with HTML, CSS, and JavaScript. Ta
 
 ## 📱 Play the Game
 
-**Live Demo:** [https://UrbanChronicles.github.io/echo-beat](https://UrbanChronicles.github.io/echo-beat)  
+**Live Demo:** [https://echobeatgame.github.io/echo-beat](https://echobeatgame.github.io/echo-beat)  
 *Requires a modern mobile or desktop browser.*
 
 ---
