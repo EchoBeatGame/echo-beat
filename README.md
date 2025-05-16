@@ -28,4 +28,3 @@ git clone https://github.com/UrbanChronicles/echo-beat.git
 cd echo-beat
 # Then open index.html in your browser
 
----
