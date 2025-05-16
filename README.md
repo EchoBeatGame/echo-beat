@@ -29,12 +29,3 @@ cd echo-beat
 # Then open index.html in your browser
 
 ---
-
-## 📄 License
-
-This project is licensed under a **Proprietary License**.
-
-- You **may not** copy, modify, distribute, or reuse the code without written permission.
-- For licensing or commercial use, contact: **echobeat.dev@gmail.com**
-
-See the [LICENSE](./LICENSE) file for details.
