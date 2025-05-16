@@ -28,6 +28,8 @@ git clone https://github.com/UrbanChronicles/echo-beat.git
 cd echo-beat
 # Then open index.html in your browser
 
+---
+
 Copyright © 2025 Echo Beat. All rights reserved.
 
 This game (Echo Beat) is proprietary software. You may not copy, modify, distribute, or reuse any part of this codebase without explicit written permission from the creator.
