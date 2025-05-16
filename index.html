@@ -4,35 +4,39 @@
   This software is proprietary. No reuse or redistribution without permission.
   Contact: echobeat.dev@gmail.com
 -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Echo Beat</title>
-  <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-879ZSB8EED"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-879ZSB8EED');
-  </script>
-
-  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div id="game">
-    <div id="pulse" class="pulse"></div>
+    <div id="lanes">
+      <div class="lane" data-lane="0"></div>
+      <div class="lane" data-lane="1"></div>
+      <div class="lane" data-lane="2"></div>
+      <div class="lane" data-lane="3"></div>
+    </div>
+    <div id="target-line"></div>
+    <div id="health-bar">
+      <div id="health-fill"></div>
+    </div>
     <div id="score">Score: 0</div>
-    <div id="feedback"></div>
+    <div id="menu">
+      <h1>Echo Beat</h1>
+      <label for="difficulty">Select Difficulty:</label>
+      <select id="difficulty">
+        <option value="easy">Easy</option>
+        <option value="medium" selected>Medium</option>
+        <option value="hard">Hard</option>
+      </select>
+      <button id="start-button">Start Game</button>
+    </div>
   </div>
-  <audio id="bgMusic" loop preload="auto">
-    <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_d69b97bf2f.mp3" type="audio/mpeg">
-  </audio>
-
+  <audio id="audio" src="audio/track.mp3"></audio>
   <script src="script.js"></script>
 </body>
 </html>
