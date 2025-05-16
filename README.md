@@ -29,10 +29,11 @@ cd echo-beat
 # Then open index.html in your browser
 
 ---
-## License
+
+## 📜 Licensing Information
 
 Copyright © 2025 Echo Beat. All rights reserved.
 
 This game (Echo Beat) is proprietary software. You may not copy, modify, distribute, or reuse any part of this codebase without explicit written permission from the creator.
 
-For licensing, collaboration, or commercial inquiries, contact: echobeat.team@gmail.com
+For licensing, collaboration, or commercial inquiries, contact: echobeat.dev@gmail.com
