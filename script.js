@@ -5,133 +5,130 @@
   Contact: echobeat.dev@gmail.com
 */
 
-// Echo Beat - Rhythm Game Enhanced 🎵💥🌈
-const bgMusic = document.getElementById("bgMusic");
+const audio = document.getElementById('audio');
+const lanes = document.querySelectorAll('.lane');
+const healthFill = document.getElementById('health-fill');
+const scoreDisplay = document.getElementById('score');
+const menu = document.getElementById('menu');
+const startButton = document.getElementById('start-button');
+const difficultySelect = document.getElementById('difficulty');
 
-let beatInterval = 2000;
-let beatStart = null;
+let beatmap = [];
+let notes = [];
 let score = 0;
-let timer;
-const pulse = document.getElementById("pulse");
-const scoreDisplay = document.getElementById("score");
-const feedback = document.getElementById("feedback");
+let health = 100;
+let gameStartTime = 0;
+let animationFrameId;
 
-const colors = ["#0ff", "#ff0", "#f0f", "#0f0", "#f00", "#00f"];
-let colorIndex = 0;
-
-// 🔊 Setup audio
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-function playClickSound() {
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-  osc.type = "sine";
-  osc.frequency.value = 880;
-  gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
-  osc.connect(gain);
-  gain.connect(audioCtx.destination);
-  osc.start();
-  osc.stop(audioCtx.currentTime + 0.3);
-}
-
-function changePulseColor() {
-  colorIndex = (colorIndex + 1) % colors.length;
-  const nextColor = colors[colorIndex];
-  pulse.style.backgroundColor = nextColor;
-  pulse.style.boxShadow = `0 0 20px ${nextColor}`;
-}
-
-function startBeat() {
-  try {
-    bgMusic.play();
-  } catch (e) {
-    console.log("Autoplay blocked. Waiting for user gesture.");
-  }
-
-  beatStart = Date.now();
-  pulse.style.animation = `pulse ${beatInterval / 1000}s infinite`;
-
-  changePulseColor();
-  playClickSound();
-
-  timer = setInterval(() => {
-    beatStart = Date.now();
-    changePulseColor();
-    playClickSound();
-  }, beatInterval);
-
-  gtag('event', 'game_start', {
-    'event_category': 'gameplay'
-  });
-}
-
-function increaseDifficulty() {
-  if (beatInterval > 500) {
-    beatInterval -= 100;
-    clearInterval(timer);
-    startBeat();
-  }
-}
-
-// 🔄 Click & Tap handler (cross-platform)
-["click", "touchstart"].forEach(eventType => {
-  document.body.addEventListener(eventType, () => {
-    const now = Date.now();
-    const timeDiff = Math.abs(now - beatStart);
-
-    if (timeDiff <= beatInterval * 0.2) {
-      score++;
-      feedback.textContent = "Perfect!";
-      pulse.classList.add("glow");
-
-      setTimeout(() => {
-        pulse.classList.remove("glow");
-      }, 200);
-
-      increaseDifficulty();
-      try { navigator.vibrate(50); } catch (e) {}
-
-      gtag('event', 'perfect_tap', {
-        'event_category': 'gameplay',
-        'value': score
-      });
-
-    } else {
-      gtag('event', 'miss_tap', {
-        'event_category': 'gameplay',
-        'value': score
-      });
-
-      score = 0;
-      feedback.textContent = "Miss!";
-      beatInterval = 2000;
-      clearInterval(timer);
-      startBeat();
-
-      gtag('event', 'reset_game', {
-        'event_category': 'gameplay'
-      });
-
-      try { navigator.vibrate([100, 50, 100]); } catch (e) {}
-    }
-
-    scoreDisplay.textContent = `Score: ${score}`;
-  });
+startButton.addEventListener('click', () => {
+  const difficulty = difficultySelect.value;
+  fetch(`beatmaps/${difficulty}.json`)
+    .then(response => response.json())
+    .then(data => {
+      beatmap = data;
+      startGame();
+    });
 });
 
-// Register Service Worker (for offline support)
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/service-worker.js')
-      .then(reg => console.log('SW registered ✔️', reg))
-      .catch(err => console.warn('SW failed ❌', err.message));
+function startGame() {
+  menu.style.display = 'none';
+  score = 0;
+  health = 100;
+  updateHealthBar();
+  updateScore();
+  notes = [];
+  beatmap.forEach(note => {
+    notes.push({ ...note, hit: false });
+  });
+  audio.currentTime = 0;
+  audio.play();
+  gameStartTime = performance.now();
+  animationFrameId = requestAnimationFrame(gameLoop);
+}
+
+function gameLoop(currentTime) {
+  const elapsed = (currentTime - gameStartTime) / 1000;
+  renderNotes(elapsed);
+  checkMisses(elapsed);
+  if (health <= 0) {
+    endGame();
+    return;
+  }
+  animationFrameId = requestAnimationFrame(gameLoop);
+}
+
+function renderNotes(elapsed) {
+  lanes.forEach(lane => lane.innerHTML = '');
+  notes.forEach(note => {
+    if (note.hit) return;
+    const timeDiff = note.time - elapsed;
+    if (timeDiff < -0.5) return; // Missed
+    if (timeDiff > 2) return; // Not yet
+    const lane = lanes[note.lane];
+    const noteEl = document.createElement('div');
+    noteEl.classList.add('note');
+    const position = (1 - timeDiff / 2) * (window.innerHeight - 100);
+    noteEl.style.top = `${position}px`;
+    lane.appendChild(noteEl);
   });
 }
 
+function checkMisses(elapsed) {
+  notes.forEach(note => {
+    if (note.hit) return;
+    if (note.time < elapsed - 0.2) {
+      note.hit = true;
+      health -= 10;
+      updateHealthBar();
+    }
+  });
+}
 
-startBeat();
-document.body.addEventListener("click", () => {
-  if (bgMusic.paused) {
-    bgMusic.play();
+function updateHealthBar() {
+  health = Math.max(0, Math.min(100, health));
+  healthFill.style.width = `${health}%`;
+  if (health > 60) {
+    healthFill.style.backgroundColor = 'green';
+  } else if (health > 30) {
+    healthFill.style.backgroundColor = 'orange';
+  } else {
+    healthFill.style.backgroundColor = 'red';
   }
-}, { once: true });
+}
+
+function updateScore() {
+  scoreDisplay.textContent = `Score: ${score}`;
+}
+
+function endGame() {
+  cancelAnimationFrame(animationFrameId);
+  audio.pause();
+  alert('Game Over!');
+  menu.style.display = 'block';
+}
+
+document.addEventListener('keydown', e => {
+  const laneIndex = parseInt(e.key) - 1;
+  if (laneIndex >= 0 && laneIndex < lanes.length) {
+    handleHit(laneIndex);
+  }
+});
+
+function handleHit(laneIndex) {
+  const currentTime = (performance.now() - gameStartTime) / 1000;
+  for (let note of notes) {
+    if (note.hit || note.lane !== laneIndex) continue;
+    const timeDiff = Math.abs(note.time - currentTime);
+    if (timeDiff < 0.2) {
+      note.hit = true;
+      score += 100;
+      health += 5;
+      updateHealthBar();
+      updateScore();
+      return;
+    }
+  }
+  // Missed
+  health -= 10;
+  updateHealthBar();
+}
