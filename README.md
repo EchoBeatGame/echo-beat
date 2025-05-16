@@ -30,10 +30,11 @@ cd echo-beat
 
 ---
 
-## 📜 Licensing Information
+## 📄 License
 
-Copyright © 2025 Echo Beat. All rights reserved.
+This project is licensed under a **Proprietary License**.
 
-This game (Echo Beat) is proprietary software. You may not copy, modify, distribute, or reuse any part of this codebase without explicit written permission from the creator.
+- You **may not** copy, modify, distribute, or reuse the code without written permission.
+- For licensing or commercial use, contact: **echobeat.dev@gmail.com**
 
-For licensing, collaboration, or commercial inquiries, contact: echobeat.dev@gmail.com
+See the [LICENSE](./LICENSE) file for details.
